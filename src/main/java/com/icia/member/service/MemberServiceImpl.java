@@ -85,6 +85,31 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    // 삭제
+    @Override
+    public void deleteById(Long memberId) {
+        mr.deleteById(memberId);
+    }
+
+    // 업데이트
+    @Override
+    public MemberDetailDTO findByEmail(String memberEmail) {
+        MemberEntity memberEntity = mr.findByMemberEmail(memberEmail);
+        MemberDetailDTO memberDetailDTO = MemberDetailDTO.toMemberDetailDTO(memberEntity);
+        return memberDetailDTO;
+    }
+
+    // 업데이트 후
+    @Override
+    public Long update(MemberDetailDTO memberDetailDTO) {
+        // JPA는 update 처리시 save 메서드 호출
+        // MemberDetailDTO -> MemberEntity 로 변경
+        MemberEntity memberEntity = MemberEntity.toUpdateMember(memberDetailDTO);
+        Long memberId = mr.save(memberEntity).getId();
+
+        return memberId;
+    }
+
 }
 
 

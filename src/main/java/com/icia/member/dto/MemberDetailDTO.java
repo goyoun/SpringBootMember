@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,13 @@ public class MemberDetailDTO {
         memberDetailDTO.setMemberName(memberEntity.getMemberName());
         // 리턴
         return memberDetailDTO;
+    }
 
+    public static List<MemberDetailDTO> change(List<MemberEntity> memberEntityList) {
+        List<MemberDetailDTO> memberDetailDTOList = new ArrayList<>();
+        for (MemberEntity m: memberEntityList) {
+            memberDetailDTOList.add(toMemberDetailDTO(m));
+        }
+        return memberDetailDTOList;
     }
 }

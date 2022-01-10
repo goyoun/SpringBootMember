@@ -1,5 +1,6 @@
 package com.icia.member;
 
+import com.icia.member.dto.MemberDetailDTO;
 import com.icia.member.dto.MemberLoginDTO;
 import com.icia.member.dto.MemberSaveDTO;
 import com.icia.member.service.MemberService;
@@ -11,9 +12,12 @@ import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 
+import java.sql.SQLOutput;
+import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
     //테스트 코드에는 @SpringBootTest를 붙인다
     @SpringBootTest
@@ -81,10 +85,27 @@ import static org.assertj.core.api.Assertions.assertThat;
         }
 
         @Test
-        @DisplayName("회원조회")
-        public void findByIdTest() {
+        @Transactional
+        @Rollback
+        @DisplayName("회원삭제 테스트")
+        public void memberDeleteTest() {
+            MemberSaveDTO memberSaveDTO = new MemberSaveDTO("삭제용 회원 이메일1", "삭제용 회원 비밀번호", "삭제용 회원이름");
+            Long memberId = ms.save(memberSaveDTO);
+            System.out.println(ms.findById(memberId));
+
+            ms.deleteById(memberId);
+//            System.out.println(ms.findById(memberId));
+            // 삭제한 회원의 id로 조회를 시도했을 때 null 이여야 테스트통과
+            // NoSuchElementException은 무시하고 테스트 수행
+            assertThrows(NoSuchElementException.class,()-> {
+               assertThat(ms.findById(memberId)).isNull(); // 삭제회원 id 조회결과가 null이면 테스트 통과
+            });
 
         }
+        // given
 
+        // when
+
+        // then
 
     }
